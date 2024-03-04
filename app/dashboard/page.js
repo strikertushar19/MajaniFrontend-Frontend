@@ -1,9 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
+import { useRouter } from 'next/navigation';
 import MyContent from "@/components/Mycontent";
 
 function UpdateContent() {
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [content, setContent] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -48,18 +50,20 @@ function UpdateContent() {
   // Function to handle logout
   const handleLogout = async () => {
     try {
-      const response = await fetch("/logout", {
+      const response = await fetch("http://localhost:8000/logout", {
         method: "POST",
         credentials: "include", // include cookies in the request
       });
       if (response.ok) {
         Cookies.remove("username"); // Remove username cookie
+        router.push('/login'); // Redirect to the login page on client-side only
         // You can perform additional logout actions here
         // For example, redirect the user to the login page
         // window.location.href = '/login';
       } else {
         throw new Error("Logout failed");
       }
+
     } catch (error) {
       console.error("Error logging out:", error);
     }
